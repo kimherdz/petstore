@@ -131,3 +131,25 @@ app.put('/api/productos/:id', async (req, res) => {
       res.status(500).send('Error en el servidor');
     }
   });
+
+  //actualización de usuarios
+  app.put('/api/clientes/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, email, telefono, direccion, tipo } = req.body; 
+
+    try {
+        const result = await pool.query(
+            'UPDATE Clientes SET nombre = $1, email = $2, telefono = $3, direccion = $4, tipo = $5 WHERE idcliente = $6 RETURNING *',
+            [nombre, email, telefono, direccion, tipo, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error al actualizar el usuario:', error);
+        res.status(500).send('Error en el servidor');
+    }
+});
