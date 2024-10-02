@@ -106,3 +106,26 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+//actualización de inventario
+app.put('/api/productos/:id', async (req, res) => {
+    const { id } = req.params; // Obtener el ID del producto
+    const { nombre, precio, descripcion, stock } = req.body; // Obtener los datos del producto
+  
+    try {
+      const result = await pool.query(
+        'UPDATE Producto SET nombre = $1, precio = $2, descripcion = $3, stock = $4 WHERE idproducto = $5 RETURNING *',
+        [nombre, precio, descripcion, stock, id]
+      );
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Producto no encontrado' });
+      }
+  
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error('Error al actualizar el producto:', error);
+      res.status(500).send('Error en el servidor');
+    }
+  });
