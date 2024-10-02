@@ -31,16 +31,13 @@ const Catalogo = () => {
   const addToCart = (id, price, name) => {
     const priceNumber = parseFloat(price.replace(/[^\d.-]/g, ''));
     
-    // Asegurarse de que se añada un nuevo objeto al carrito con la información completa
     setCart([...cart, { id, name, price: priceNumber, quantity: 1, totalPrice: priceNumber }]);
-    
-    // Actualiza el total
     setTotal(prevTotal => prevTotal + priceNumber);
   };
 
   const renderCartItems = () => {
-    return cart.map((item, index) => (
-      <li key={index}>
+    return cart.map((item) => (
+      <li key={item.id}>
         {item.name} - Q{item.price.toFixed(2)}
       </li>
     ));
@@ -57,11 +54,9 @@ const Catalogo = () => {
     localStorage.setItem('total', total);
     navigate('/login'); 
   };
-  
 
   return (
     <div>
-      
       <div className="image-container">
         <img src={petsandtrails} alt="Imagen de Productos" className="catalog-image" />
       </div>
@@ -113,9 +108,9 @@ const Catalogo = () => {
           <Button variant="secondary" onClick={handleClose}>
             Cerrar
           </Button>
-            <Button variant="primary" onClick={handleProceedToLogin}>
+          <Button variant="primary" onClick={handleProceedToLogin}>
             Proceder al Courier
-            </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
