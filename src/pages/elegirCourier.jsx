@@ -23,7 +23,6 @@ export default function Courier() {
       try {
         const response = await fetch(`http://localhost:5000/api/getPostal?email=${email}`);
         const data = await response.json();
-        console.log(data)
         if (data.postal) {
           setPostal(data.postal);
           setDestino(data.postal);
