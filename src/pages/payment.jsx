@@ -20,45 +20,15 @@ const Payment = () => {
     { value: 'Credomatic', label: 'Credomatic' },
   ];
 
-  // Función para permitir solo números en el campo de número de tarjeta
   const handleCardNumberChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remover cualquier carácter no numérico
+    const value = e.target.value.replace(/\D/g, '');
     setCardNumber(value);
   };
 
-  // Función para permitir solo números en el campo de fecha de vencimiento
-  const handleExpiryDateChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remover cualquier carácter no numérico
-    setExpiryDate(value);
-  };
-
-  // Función para permitir solo números en el campo de código de seguridad
-  const handleSecurityCodeChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remover cualquier carácter no numérico
-    setSecurityCode(value);
-  };
-
-  // Algoritmo de Luhn para validar el número de la tarjeta
   const validateCardNumber = (cardNumber) => {
-    let sum = 0;
-    let shouldDouble = false;
-
-    for (let i = cardNumber.length - 1; i >= 0; i--) {
-      let digit = parseInt(cardNumber.charAt(i), 10);
-
-      if (shouldDouble) {
-        digit *= 2;
-        if (digit > 9) digit -= 9;
-      }
-
-      sum += digit;
-      shouldDouble = !shouldDouble;
-    }
-
-    return sum % 10 === 0;
+    return cardNumber.length === 16;
   };
 
-  // Validación de la fecha de expiración (YYYYMM)
   const validateExpiryDate = (expiryDate) => {
     const today = new Date();
     const year = parseInt(expiryDate.substring(0, 4), 10);
@@ -79,7 +49,7 @@ const Payment = () => {
     event.preventDefault();
 
     if (!validateCardNumber(cardNumber)) {
-      alert('Número de tarjeta de crédito inválido. Por favor, asegúrate de ingresar solo números.');
+      alert('Número de tarjeta de crédito inválido. Debe tener 16 dígitos.');
       return;
     }
 
@@ -138,7 +108,7 @@ const Payment = () => {
           id="cardNumber"
           inputMode='numeric'
           value={cardNumber}
-          onChange={handleCardNumberChange} // Usar la función que permite solo números
+          onChange={handleCardNumberChange}
           maxLength="16"
           required
         /><br />
@@ -156,9 +126,8 @@ const Payment = () => {
         <input
           type="text"
           id="expiryDate"
-          inputMode="numeric"
           value={expiryDate}
-          onChange={handleExpiryDateChange} // Usar la función que permite solo números
+          onChange={(e) => setExpiryDate(e.target.value)}
           maxLength="6"
           required
         /><br />
@@ -167,10 +136,9 @@ const Payment = () => {
         <input
           type="text"
           id="securityCode"
-          inputMode="numeric"
           value={securityCode}
-          onChange={handleSecurityCodeChange} // Usar la función que permite solo números
-          maxLength="4"
+          onChange={(e) => setSecurityCode(e.target.value)}
+          maxLength="3"
           required
         /><br />
         
