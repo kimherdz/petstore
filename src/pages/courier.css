@@ -1,0 +1,24 @@
+
+
+
+h2 {
+    text-align: center; /* Centra el título */
+    margin-bottom: 20px; /* Espacio debajo del título */
+    color: #023047; /* Color del texto */
+}
+
+.form-group {
+    margin-bottom: 15px; /* Espaciado entre grupos de formulario */
+}
+
+
+
+button {
+    width: 100%; /* Botones ocupan todo el ancho */
+    margin-top: 10px; /* Espacio entre botones */
+}
+
+button:hover {
+    background-color: #FB8500; /* Color de fondo al pasar el mouse */
+    color: #fff; /* Color del texto al pasar el mouse */
+}

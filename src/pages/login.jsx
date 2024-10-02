@@ -1,21 +1,35 @@
 import React, { useState } from 'react';
-import './style.css'; // Asegúrate de importar tu archivo CSS aquí
-import 'bootstrap/dist/css/bootstrap.min.css'; // Importar Bootstrap
+import axios from 'axios';
+import './style.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const data = {
-      email,
-      password,
-    };
+    try {
+        const response = await axios.post('http://localhost:5000/api/login', {
+            email,
+            password,
+        });
 
-    console.log('Datos a enviar:', data);
-  };
+        console.log('Login exitoso:', response.data);
+        navigate('/courier');
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            setError('Correo o contraseña incorrectos.');
+        } else {
+            setError('Error al intentar iniciar sesión. Inténtelo más tarde.');
+        }
+    }
+};
 
   return (
     <div className="container">

@@ -53,8 +53,9 @@ const Catalogo = () => {
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
-  const handleProceedToCourier = () => {
-    navigate('/courier', { state: { total: total } }); 
+  const handleProceedToLogin = () => {
+    localStorage.setItem('total', total);
+    navigate('/login'); 
   };
   
 
@@ -112,7 +113,7 @@ const Catalogo = () => {
           <Button variant="secondary" onClick={handleClose}>
             Cerrar
           </Button>
-            <Button variant="primary" onClick={handleProceedToCourier}>
+            <Button variant="primary" onClick={handleProceedToLogin}>
             Proceder al Courier
             </Button>
         </Modal.Footer>

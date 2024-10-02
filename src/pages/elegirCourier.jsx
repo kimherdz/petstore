@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import './courier.css';
 
 export default function Courier() {
   const location = useLocation();
@@ -44,7 +45,7 @@ export default function Courier() {
   };
 
   const handleProceedToPayment = () => {
-    navigate('/payment', { state: { total: total } });
+    navigate('/payment');
   };
 
   return (

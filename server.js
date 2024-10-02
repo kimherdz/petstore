@@ -76,6 +76,31 @@ app.get('/api/getPostal', async (req, res) => {
 });
 
 
+//login
+app.post('/api/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const result = await pool.query('SELECT * FROM Clientes WHERE email = $1', [email]);
+
+        if (result.rows.length === 0) {
+            return res.status(401).json({ error: 'Usuario no encontrado' });
+        }
+
+        const user = result.rows[0];
+        
+        // Comparar la contraseña directamente
+        if (password !== user.contraseña) { // Comparación directa
+            return res.status(401).json({ error: 'Contraseña incorrecta' });
+        }
+
+        res.json({ message: 'Inicio de sesión exitoso', user: { nombre: user.nombre, email: user.email, tipo: user.tipo } });
+    } catch (error) {
+        console.error('Error al procesar el login:', error);
+        res.status(500).send('Error en el servidor');
+    }
+});
+
 // Iniciar el servidor en el puerto 5000
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

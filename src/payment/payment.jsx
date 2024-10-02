@@ -5,13 +5,11 @@ import '../catalogo/catcss.css';
 const Payment = () => {
 
   const location = useLocation();
-  const { total } = location.state || { total: 0 };
-
+  const total = parseFloat(localStorage.getItem('total')) || 0;
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [securityCode, setSecurityCode] = useState('');
-  const [amount, setAmount] = useState('');
 
   //validacion (Algoritmo de Luhn)
   const validateCardNumber = (cardNumber) => {

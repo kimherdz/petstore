@@ -129,14 +129,7 @@ const ProcessPayment = () => {
           required
         /><br />
 
-        <label htmlFor="amount">Monto a Pagar:</label>
-        <input
-          type="text"
-          id="amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          required
-        /><br />
+        
 
         <button type="submit">Pagar</button>
       </form>
