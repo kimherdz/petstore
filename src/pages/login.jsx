@@ -19,9 +19,8 @@ const Login = () => {
             email,
             password,
         });
-
         console.log('Login exitoso:', response.data);
-        navigate('/courier');
+        navigate('/courier', { state: { email: email } });
     } catch (error) {
         if (error.response && error.response.status === 401) {
             setError('Correo o contraseña incorrectos.');

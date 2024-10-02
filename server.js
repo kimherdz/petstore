@@ -60,20 +60,23 @@ app.get('/api/productos', async (req, res) => {
     }
 });
 
+// obtener el postal
 app.get('/api/getPostal', async (req, res) => {
     const { email } = req.query;
     try {
-        const result = await pool.query('SELECT postal FROM Clientes WHERE email = $1', [email]);
-        if (result.rows.length > 0) {
-            res.json({ postal: result.rows[0].postal })
-        } else{
-            res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Error en el servidor');
+      const result = await pool.query('SELECT postal FROM Clientes WHERE email = $1', [email]);
+      if (result.rows.length > 0) {
+        console.log('Código postal encontrado:', result.rows[0].postal);
+        res.json({ postal: result.rows[0].postal });
+      } else {
+        console.log('No se encontró el código postal para el correo:', email);
+        res.status(404).json({ error: 'Código postal no encontrado' });
+      }
+    } catch (error) {
+      console.error('Error en la consulta de la base de datos', error);
+      res.status(500).json({ error: 'Error en la consulta de la base de datos' });
     }
-});
+  });
 
 
 //login
