@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../catalogo/catcss.css';
+import { Form, Button } from 'react-bootstrap';
 
 const Payment = () => {
   const location = useLocation();
@@ -10,8 +11,34 @@ const Payment = () => {
   const [expiryDate, setExpiryDate] = useState('');
   const [securityCode, setSecurityCode] = useState('');
   const [message, setMessage] = useState('');
+  const [emisor, setEmisor] = useState('');
 
-  // Algoritmo de Luhn
+  const cardOptions = [
+    { value: 'Visa', label: 'Visa' },
+    { value: 'American Express', label: 'American Express' },
+    { value: 'Master Card', label: 'Master Card' },
+    { value: 'Credomatic', label: 'Credomatic' },
+  ];
+
+  // Función para permitir solo números en el campo de número de tarjeta
+  const handleCardNumberChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remover cualquier carácter no numérico
+    setCardNumber(value);
+  };
+
+  // Función para permitir solo números en el campo de fecha de vencimiento
+  const handleExpiryDateChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remover cualquier carácter no numérico
+    setExpiryDate(value);
+  };
+
+  // Función para permitir solo números en el campo de código de seguridad
+  const handleSecurityCodeChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remover cualquier carácter no numérico
+    setSecurityCode(value);
+  };
+
+  // Algoritmo de Luhn para validar el número de la tarjeta
   const validateCardNumber = (cardNumber) => {
     let sum = 0;
     let shouldDouble = false;
@@ -31,21 +58,15 @@ const Payment = () => {
     return sum % 10 === 0;
   };
 
+  // Validación de la fecha de expiración (YYYYMM)
   const validateExpiryDate = (expiryDate) => {
     const today = new Date();
-    const parts = expiryDate.split('/');
-
-    if (parts.length !== 2) {
-      return false;
-    }
-
-    const month = parseInt(parts[0], 10);
-    const year = parseInt('20' + parts[1], 10);
+    const year = parseInt(expiryDate.substring(0, 4), 10);
+    const month = parseInt(expiryDate.substring(4, 6), 10);
 
     return (
-      month >= 1 &&
-      month <= 12 &&
-      (year > today.getFullYear() || (year === today.getFullYear() && month >= today.getMonth() + 1))
+      year > today.getFullYear() ||
+      (year === today.getFullYear() && month >= today.getMonth() + 1)
     );
   };
 
@@ -58,7 +79,7 @@ const Payment = () => {
     event.preventDefault();
 
     if (!validateCardNumber(cardNumber)) {
-      alert('Número de tarjeta de crédito inválido.');
+      alert('Número de tarjeta de crédito inválido. Por favor, asegúrate de ingresar solo números.');
       return;
     }
 
@@ -73,7 +94,7 @@ const Payment = () => {
     }
 
     // URL de la API para la autorización del pago
-    const url = `http://emisor/autorizacion?tarjeta=${cardNumber}&nombre=${cardName}&fecha_venc=${expiryDate}&num_seguridad=${securityCode}&monto=${total}&tienda=Petstore&formato=json`;
+    const url = `http://${encodeURIComponent(emisor)}/autorizacion?tarjeta=${cardNumber}&nombre=${cardName}&fecha_venc=${expiryDate}&num_seguridad=${securityCode}&monto=${total}&tienda=Petstore&formato=json`;
 
     try {
       const response = await fetch(url);
@@ -94,12 +115,30 @@ const Payment = () => {
     <div>
       <h2>Pago</h2>
       <form onSubmit={handleSubmit}>
+
+      <Form.Group controlId="cardSelect">
+            <Form.Label>Elegir Emisor</Form.Label>
+            <Form.Control
+              as="select"
+              value={emisor}
+              onChange={(e) => setEmisor(e.target.value)}
+            >
+              <option value="">Seleccione un emisor</option>
+              {cardOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+
         <label htmlFor="cardNumber">Número de Tarjeta:</label>
         <input
           type="text"
           id="cardNumber"
+          inputMode='numeric'
           value={cardNumber}
-          onChange={(e) => setCardNumber(e.target.value)}
+          onChange={handleCardNumberChange} // Usar la función que permite solo números
           maxLength="16"
           required
         /><br />
@@ -113,13 +152,14 @@ const Payment = () => {
           required
         /><br />
 
-        <label htmlFor="expiryDate">Fecha de Vencimiento (MM/YY):</label>
+        <label htmlFor="expiryDate">Fecha de Vencimiento (YYYYMM):</label>
         <input
           type="text"
           id="expiryDate"
+          inputMode="numeric"
           value={expiryDate}
-          onChange={(e) => setExpiryDate(e.target.value)}
-          maxLength="5"
+          onChange={handleExpiryDateChange} // Usar la función que permite solo números
+          maxLength="6"
           required
         /><br />
 
@@ -127,11 +167,13 @@ const Payment = () => {
         <input
           type="text"
           id="securityCode"
+          inputMode="numeric"
           value={securityCode}
-          onChange={(e) => setSecurityCode(e.target.value)}
-          maxLength="3"
+          onChange={handleSecurityCodeChange} // Usar la función que permite solo números
+          maxLength="4"
           required
         /><br />
+        
         <p className="monto-total">Monto total a Pagar: Q{total.toFixed(2)}</p>
 
         <button type="submit">Pagar</button>
