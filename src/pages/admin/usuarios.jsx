@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Table, Spinner, Button, Form } from "react-bootstrap";
 import axios from "axios";
-import './admin.css'; // Asegúrate de tener tu CSS adecuado
+import './admin.css';
 
 export default function Users() {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editIndex, setEditIndex] = useState(null); // Indica qué usuario se está editando
+  const [editIndex, setEditIndex] = useState(null);
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -15,8 +15,8 @@ export default function Users() {
     direccion: '',
     tipo: ''
   });
-  const [sortOrder, setSortOrder] = useState('id'); // Estado para el orden
-  const [sortDirection, setSortDirection] = useState('asc'); // Estado para la dirección
+  const [sortOrder, setSortOrder] = useState('id');
+  const [sortDirection, setSortDirection] = useState('asc');
 
   useEffect(() => {
     const fetchUsuarios = async () => {
@@ -44,7 +44,6 @@ export default function Users() {
       return valueA < valueB ? 1 : -1;
     }
   };
-
   // Ordenar usuarios cuando cambia el estado
   const sortedUsers = usuarios.sort(sortUsers);
 
@@ -79,11 +78,22 @@ export default function Users() {
     try {
       const response = await axios.put(`http://localhost:5000/api/clientes/${id}`, formData);
       const updatedUsuarios = [...usuarios];
-      updatedUsuarios[editIndex] = response.data; // Actualiza el usuario editado
+      updatedUsuarios[editIndex] = response.data;
       setUsuarios(updatedUsuarios);
-      setEditIndex(null); // Salir del modo edición
+      setEditIndex(null);
     } catch (error) {
       console.error("Error al actualizar el usuario:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/clientes/${id}`);
+        setUsuarios(usuarios.filter(usuario => usuario.idcliente !== id));
+      } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+      }
     }
   };
 
@@ -94,7 +104,6 @@ export default function Users() {
   const handleDirectionChange = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
-
 
   return (
     <>
@@ -122,7 +131,7 @@ export default function Users() {
             <th>Teléfono</th>
             <th>Dirección</th>
             <th>Tipo</th>
-            <th> </th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -144,9 +153,9 @@ export default function Users() {
               <td>
                 {editIndex === index ? (
                   <Form.Control
-                    type="email" // Campo de tipo email
+                    type="email" 
                     name="email"
-                    value={formData.email} // Ahora editable
+                    value={formData.email} 
                     onChange={handleInputChange}
                   />
                 ) : (
@@ -191,7 +200,10 @@ export default function Users() {
               </td>
               <td>
                 {editIndex === index ? (
+                  <> 
                   <Button variant="success" onClick={() => handleSave(usuario.idcliente)}>Guardar</Button>
+                  <Button variant="danger" onClick={() => handleDelete(usuario.idcliente)}>Eliminar</Button>
+                  </> 
                 ) : (
                   <Button variant="primary" onClick={() => handleEditClick(index)}>Editar</Button>
                 )}

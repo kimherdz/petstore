@@ -85,6 +85,17 @@ export default function Inventory() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/productos/${id}`);
+        setProductos(productos.filter(producto => producto.idproducto !== id));
+      } catch (error) {
+        console.error("Error al eliminar el producto:", error);
+      }
+    }
+  };
+
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
   };
@@ -175,7 +186,10 @@ export default function Inventory() {
               </td>
               <td>
                 {editIndex === index ? (
+                  <> 
                   <Button variant="success" onClick={() => handleSave(producto.idproducto)}>Guardar</Button>
+                  <Button variant="danger" onClick={() => handleDelete(producto.idproducto)}>Eliminar</Button>
+                  </>
                 ) : (
                   <Button variant="primary" onClick={() => handleEditClick(index)}>Editar</Button>
                 )}
