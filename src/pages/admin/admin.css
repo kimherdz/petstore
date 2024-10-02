@@ -1,0 +1,14 @@
+.adminbut {
+    display: flex;
+    justify-content: center;
+    gap: 3rem; /* Espaciado entre los botones */
+    margin-top: 20px; 
+}
+
+.adminbut button {
+    font-size: 30px;
+}
+
+.invBut{
+    justify-content: center;
+}

@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import './courier.css';
 
 export default function Courier() {
   const location = useLocation();
@@ -49,6 +48,7 @@ export default function Courier() {
 
   return (
     <>
+    <h2 className="courier-title">Courier</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="courierSelect">
           <Form.Label>Elegir Courier</Form.Label>
@@ -76,13 +76,17 @@ export default function Courier() {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" >
           Consultar Costo de Envío
         </Button>
       </Form>
 
       <br />
-      <Button variant="success" onClick={handleProceedToPayment}>
+      <Button
+      className="butt0n" 
+      variant="success" 
+      onClick={handleProceedToPayment} 
+      style={{ display: 'block', margin: '0 auto' }}>
         Proceder al Pago
       </Button>
     </>
