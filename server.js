@@ -66,7 +66,6 @@ app.get('/api/getPostal', async (req, res) => {
     try {
       const result = await pool.query('SELECT postal FROM Clientes WHERE email = $1', [email]);
       if (result.rows.length > 0) {
-        console.log('Código postal encontrado:', result.rows[0].postal);
         res.json({ postal: result.rows[0].postal });
       } else {
         console.log('No se encontró el código postal para el correo:', email);

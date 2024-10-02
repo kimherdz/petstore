@@ -12,9 +12,10 @@ export default function Courier() {
   const navigate = useNavigate();
 
   const courierOptions = [
-    { value: 'C1', label: 'Speedybox' },
-    { value: 'C2', label: 'Courier 2' },
-    { value: 'C3', label: 'Courier 3' },
+    { value: 'UG Express', label: 'UG Express' },
+    { value: 'Entregas Mcqueen', label: 'Entregas Mcqueen' },
+    { value: 'ALC Express', label: 'ALC Express' },
+    { value: 'SpeedyBox', label: 'SpeedyBox' },
   ];
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function Courier() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = `http://courrier/consulta?destino=${destino}&formato=${formato}`;
+    const url = `http://${encodeURIComponent(courier)}/consulta?destino=${destino}&formato=${formato}`;
     console.log("Enviando solicitud a URL:", url);
   };
 
