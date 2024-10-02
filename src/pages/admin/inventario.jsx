@@ -108,6 +108,7 @@ export default function Inventory() {
         <Button variant="info" onClick={handleDirectionChange}>
           Cambiar dirección: {sortDirection === 'asc' ? 'Ascendente' : 'Descendente'}
         </Button>
+        
       </Form.Group>
 
       <Table striped bordered hover>
