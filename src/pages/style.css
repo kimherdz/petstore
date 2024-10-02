@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400&display=swap');
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-image: url('./imagenes/fondo.png');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    height: 100vh;
+}
+
+h2 {
+    color: #364420;
+    text-align: center; 
+    padding: 1rem;
+    font-weight: bolder;
+    font-size: 3rem;
+}
+
+form {
+    background-color: #faf2de;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #364420;
+    padding-top: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 1rem;
+    border: 1px solid #364420;
+    border-radius: 8px;
+    background-color: #faf2de;
+}
+label {
+    font-weight: bold;
+}
+
+input[type="radio"] {
+    margin-right: 7px; 
+    cursor: pointer;
+    color: #364420;
+}
+
+.radio-admin{
+    padding-left: 1rem;
+}
+.radio-user{
+    padding-left: 1rem;
+}
+
+.createAccount {
+    color: #72b01d;
+    font-weight: bold; 
+    text-decoration: none;
+}
+
+.createAccount:hover {
+    color: #CC5803; 
+}
+
+button {
+    background-color: #CC5803 !important;
+    color: white !important;
+    border: none !important;
+    padding: 5px 10px !important;
+    cursor: pointer !important;
+    border-radius: 10px !important;
+    margin-bottom: 1rem;
+}
+
+button:hover {
+    background-color: #a5be00 !important;
+}
+

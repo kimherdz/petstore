@@ -1,0 +1,23 @@
+.navbar {
+    background-color: #CC5803;
+    padding-left: 1rem;
+}
+
+.nav-link:hover {
+    color: #72b01d;
+    transition: color 0.3s ease;
+}
+
+.nav-link {
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+@media (max-width: 991px) { 
+    .navbar {
+        padding: 0.5rem 1rem; 
+    }
+    .nav-link {
+        margin: 5px 0; 
+    }
+}
