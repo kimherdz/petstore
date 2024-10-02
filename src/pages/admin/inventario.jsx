@@ -7,7 +7,7 @@ export default function Inventory() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editIndex, setEditIndex] = useState(null); // Indica qué producto se está editando
+  const [editIndex, setEditIndex] = useState(null); 
   const [formData, setFormData] = useState({
     nombre: '',
     precio: '',
@@ -108,7 +108,6 @@ export default function Inventory() {
         <Button variant="info" onClick={handleDirectionChange}>
           Cambiar dirección: {sortDirection === 'asc' ? 'Ascendente' : 'Descendente'}
         </Button>
-        
       </Form.Group>
 
       <Table striped bordered hover>
@@ -119,7 +118,7 @@ export default function Inventory() {
             <th>Precio</th>
             <th>Descripción</th>
             <th>Cantidad</th>
-            <th>Acciones</th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
