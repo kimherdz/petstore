@@ -9,6 +9,7 @@ import Inventory from './pages/admin/inventario';
 import Payment from './pages/payment';
 import Users from './pages/admin/usuarios';
 import Status from './pages/status';
+import CrearCuenta from './pages/crearCuenta';
 
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         <Route path='Login' element={<Login />} />;
         <Route path='usuarios' element={<Users />} />;
         <Route path='status' element={<Status />} />;
+        <Route path='crearCuenta' element={<CrearCuenta />} />;
       </Routes>
        
     </BrowserRouter>
