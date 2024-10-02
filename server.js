@@ -110,10 +110,10 @@ app.listen(PORT, () => {
 });
 
 
-//actualización de inventario
+//editar inventario
 app.put('/api/productos/:id', async (req, res) => {
-    const { id } = req.params; // Obtener el ID del producto
-    const { nombre, precio, descripcion, stock } = req.body; // Obtener los datos del producto
+    const { id } = req.params; 
+    const { nombre, precio, descripcion, stock } = req.body;
   
     try {
       const result = await pool.query(
@@ -132,7 +132,23 @@ app.put('/api/productos/:id', async (req, res) => {
     }
   });
 
-  //actualización de usuarios
+  //eliminar producto
+  app.delete('/api/productos/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query('DELETE FROM Producto WHERE idproducto = $1 RETURNING *', [id]);
+        if (result.rowCount > 0) {
+            res.status(204).send();
+        } else {
+            res.status(404).send('Producto no encontrado');
+        }
+    } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        res.status(500).send('Error en el servidor');
+    }
+});
+
+  //editar usuarios
   app.put('/api/clientes/:id', async (req, res) => {
     const { id } = req.params;
     const { nombre, email, telefono, direccion, tipo } = req.body; 
@@ -153,3 +169,16 @@ app.put('/api/productos/:id', async (req, res) => {
         res.status(500).send('Error en el servidor');
     }
 });
+
+//eliminar usuarios
+app.delete('/api/clientes/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      await pool.query('DELETE FROM Clientes WHERE idcliente = $1', [id]);
+      res.status(204).send(); 
+  } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+      res.status(500).send('Error en el servidor');
+  }
+}); 
