@@ -12,3 +12,21 @@
 .invBut{
     justify-content: center;
 }
+
+
+.form-group-inline {
+    display: flex;
+    align-items: first baseline; 
+    gap: 1rem;
+  }
+  
+  .form-group-inline select {
+    width: 200px; 
+  }
+  
+  .label-inventario{
+    padding-left: 1rem;
+  }
+ 
+  
+  
