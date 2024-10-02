@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Table, Spinner, Button, Form } from "react-bootstrap";
 import axios from "axios";
+import './admin.css';
 
 export default function Inventory() {
   const [productos, setProductos] = useState([]);
@@ -96,8 +97,8 @@ export default function Inventory() {
     <>
       <h2>Inventario</h2>
 
-      <Form.Group>
-        <Form.Label>Ordenar por:</Form.Label>
+      <Form.Group className="form-group-inline">
+        <Form.Label className="label-inventario">Ordenar por:</Form.Label>
         <Form.Select onChange={handleSortChange} value={sortOrder}>
           <option value="id">ID</option>
           <option value="cantidad">Cantidad</option>
@@ -107,6 +108,7 @@ export default function Inventory() {
         <Button variant="info" onClick={handleDirectionChange}>
           Cambiar dirección: {sortDirection === 'asc' ? 'Ascendente' : 'Descendente'}
         </Button>
+        
       </Form.Group>
 
       <Table striped bordered hover>
