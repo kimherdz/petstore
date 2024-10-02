@@ -4,16 +4,15 @@ import { Form, Button } from 'react-bootstrap';
 
 export default function Courier() {
   const location = useLocation();
-  const { total, email } = location.state || { total: 0, email: '' }; // Recibe el email del usuario loggeado
-  const [destino, setDestino] = useState(''); // Almacenará el código postal
+  const { total, email } = location.state || { total: 0, email: '' };
+  const [destino, setDestino] = useState('');
   const [formato, setFormato] = useState('json');
   const [postal, setPostal] = useState('');
-  const [courier, setCourier] = useState(''); // Almacenará el courier seleccionado
+  const [courier, setCourier] = useState('');
   const navigate = useNavigate();
 
-  // Opciones de courier (ejemplos)
   const courierOptions = [
-    { value: 'C1', label: 'Courier 1' },
+    { value: 'C1', label: 'Speedybox' },
     { value: 'C2', label: 'Courier 2' },
     { value: 'C3', label: 'Courier 3' },
   ];
@@ -25,7 +24,7 @@ export default function Courier() {
         const data = await response.json();
         if (data.postal) {
           setPostal(data.postal);
-          setDestino(data.postal); // Setear el destino automáticamente al código postal
+          setDestino(data.postal);
         }
       } catch (error) {
         console.error('Error al obtener el código postal', error);
@@ -39,7 +38,7 @@ export default function Courier() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = `http://courrier/consulta?destino=${destino}&formato=${formato}&courier=${courier}`;
+    const url = `http://courrier/consulta?destino=${destino}&formato=${formato}`;
     console.log("Enviando solicitud a URL:", url);
   };
 

@@ -14,22 +14,19 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
-        email,
-        password,
-      });
+        const response = await axios.post('http://localhost:5000/api/login', {
+            email,
+            password,
+        });
 
-      console.log('Login exitoso:', response.data);
-      
-      // Redireccionar según el tipo de usuario
-      const userType = response.data.user.tipo; // Asumiendo que `tipo` está en la respuesta
+        console.log('Login exitoso:', response.data);
+        const userType = response.data.user.tipo; // Asumiendo que `tipo` está en la respuesta
 
       if (userType === 'a') {
         navigate('/admin'); // Redirigir al panel de administrador
       } else if (userType === 'u') {
-        navigate('/courier'); // Redirigir a la página del usuario normal
+        navigate('/courier', { state: { email: email } });
       }
-
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError('Correo o contraseña incorrectos.');
