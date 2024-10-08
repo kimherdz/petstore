@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Table, Spinner, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import './admin.css';
+import { Link } from "react-router-dom";
 
 export default function Users() {
   const [usuarios, setUsuarios] = useState([]);
@@ -105,13 +106,15 @@ export default function Users() {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
 
+
+
   return (
     <>
       <h2>Usuarios</h2>
       <div className="adminbut2">
-        <Button variant="secondary" onClick={() => navigate('/admin')}>
-          Volver
-        </Button>
+        <Link to="/admin">
+          <Button className="menu-button mb-3">Regresar</Button>
+        </Link>
       </div>
 
       <Form.Group className="form-group-inline">
@@ -127,97 +130,97 @@ export default function Users() {
         </Button>
       </Form.Group>
 
-    <div className="container d-flex justify-content-center mt-3">
-      <Table striped bordered hover>
-        <thead>
-        <tr className="text-center">
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Dirección</th>
-            <th>Tipo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedUsers.map((usuario, index) => (
-            <tr key={usuario.idcliente}>
-               <td className="text-center">{usuario.idcliente}</td>
-               <td>
-                {editIndex === index ? (
-                  <Form.Control
-                    type="text"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  usuario.nombre
-                )}
-              </td>
-              <td>
-                {editIndex === index ? (
-                  <Form.Control
-                    type="email" 
-                    name="email"
-                    value={formData.email} 
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  usuario.email
-                )}
-              </td>
-              <td className="text-center">
-                {editIndex === index ? (
-                  <Form.Control
-                    type="text"
-                    name="telefono"
-                    value={formData.telefono}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  usuario.telefono
-                )}
-              </td>
-              <td>
-                {editIndex === index ? (
-                  <Form.Control
-                    type="text"
-                    name="direccion"
-                    value={formData.direccion}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  usuario.direccion
-                )}
-              </td>
-              <td className="text-center">
-                {editIndex === index ? (
-                  <Form.Control
-                    type="text"
-                    name="tipo"
-                    value={formData.tipo}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  usuario.tipo
-                )}
-              </td>
-              <td className="text-center">
-                {editIndex === index ? (
-                  <> 
-                  <Button variant="success" onClick={() => handleSave(usuario.idcliente)}>Guardar</Button>
-                  <Button variant="danger" onClick={() => handleDelete(usuario.idcliente)}>Eliminar</Button>
-                  </> 
-                ) : (
-                  <Button variant="primary" onClick={() => handleEditClick(index)}>Editar</Button>
-                )}
-              </td>
+      <div className="container d-flex justify-content-center mt-3">
+        <Table striped bordered hover>
+          <thead>
+            <tr className="text-center">
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Tipo</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {sortedUsers.map((usuario, index) => (
+              <tr key={usuario.idcliente}>
+                <td className="text-center">{usuario.idcliente}</td>
+                <td>
+                  {editIndex === index ? (
+                    <Form.Control
+                      type="text"
+                      name="nombre"
+                      value={formData.nombre}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    usuario.nombre
+                  )}
+                </td>
+                <td>
+                  {editIndex === index ? (
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    usuario.email
+                  )}
+                </td>
+                <td className="text-center">
+                  {editIndex === index ? (
+                    <Form.Control
+                      type="text"
+                      name="telefono"
+                      value={formData.telefono}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    usuario.telefono
+                  )}
+                </td>
+                <td>
+                  {editIndex === index ? (
+                    <Form.Control
+                      type="text"
+                      name="direccion"
+                      value={formData.direccion}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    usuario.direccion
+                  )}
+                </td>
+                <td className="text-center">
+                  {editIndex === index ? (
+                    <Form.Control
+                      type="text"
+                      name="tipo"
+                      value={formData.tipo}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    usuario.tipo
+                  )}
+                </td>
+                <td className="text-center">
+                  {editIndex === index ? (
+                    <>
+                      <Button variant="success" onClick={() => handleSave(usuario.idcliente)}>Guardar</Button>
+                      <Button variant="danger" onClick={() => handleDelete(usuario.idcliente)}>Eliminar</Button>
+                    </>
+                  ) : (
+                    <Button variant="primary" onClick={() => handleEditClick(index)}>Editar</Button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
     </>
   );
