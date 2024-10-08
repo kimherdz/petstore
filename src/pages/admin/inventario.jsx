@@ -107,7 +107,11 @@ export default function Inventory() {
   return (
     <>
       <h2>Inventario</h2>
-
+      <div className="adminbut2">
+        <Button variant="secondary" onClick={() => navigate('/adminsss')}>
+          Volver
+        </Button>
+      </div>
       <Form.Group className="form-group-inline">
         <Form.Label className="label-inventario">Ordenar por:</Form.Label>
         <Form.Select onChange={handleSortChange} value={sortOrder}>
@@ -120,10 +124,10 @@ export default function Inventory() {
           Cambiar dirección: {sortDirection === 'asc' ? 'Ascendente' : 'Descendente'}
         </Button>
       </Form.Group>
-
+    <div className="container d-flex justify-content-center mt-3">
       <Table striped bordered hover>
         <thead>
-          <tr>
+        <tr className="text-center">
             <th>ID</th>
             <th>Nombre</th>
             <th>Precio</th>
@@ -135,7 +139,7 @@ export default function Inventory() {
         <tbody>
           {sortedProducts.map((producto, index) => (
             <tr key={producto.idproducto}>
-              <td>{producto.idproducto}</td>
+              <td className="text-center">{producto.idproducto}</td>
               <td>
                 {editIndex === index ? (
                   <Form.Control
@@ -148,7 +152,7 @@ export default function Inventory() {
                   producto.nombre
                 )}
               </td>
-              <td>
+              <td className="text-center">
                 {editIndex === index ? (
                   <Form.Control
                     type="number"
@@ -172,7 +176,7 @@ export default function Inventory() {
                   producto.descripcion
                 )}
               </td>
-              <td>
+              <td className="text-center">
                 {editIndex === index ? (
                   <Form.Control
                     type="number"
@@ -184,7 +188,7 @@ export default function Inventory() {
                   producto.stock > 0 ? producto.stock : "Sin stock"
                 )}
               </td>
-              <td>
+              <td className="text-center">
                 {editIndex === index ? (
                   <> 
                   <Button variant="success" onClick={() => handleSave(producto.idproducto)}>Guardar</Button>
@@ -198,6 +202,7 @@ export default function Inventory() {
           ))}
         </tbody>
       </Table>
+     </div> 
     </>
   );
 }

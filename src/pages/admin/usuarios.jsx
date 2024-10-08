@@ -108,6 +108,11 @@ export default function Users() {
   return (
     <>
       <h2>Usuarios</h2>
+      <div className="adminbut2">
+        <Button variant="secondary" onClick={() => navigate('/admin')}>
+          Volver
+        </Button>
+      </div>
 
       <Form.Group className="form-group-inline">
         <Form.Label className="label-inventario">Ordenar por:</Form.Label>
@@ -122,9 +127,10 @@ export default function Users() {
         </Button>
       </Form.Group>
 
+    <div className="container d-flex justify-content-center mt-3">
       <Table striped bordered hover>
         <thead>
-          <tr>
+        <tr className="text-center">
             <th>ID</th>
             <th>Nombre</th>
             <th>Email</th>
@@ -137,8 +143,8 @@ export default function Users() {
         <tbody>
           {sortedUsers.map((usuario, index) => (
             <tr key={usuario.idcliente}>
-              <td>{usuario.idcliente}</td>
-              <td>
+               <td className="text-center">{usuario.idcliente}</td>
+               <td>
                 {editIndex === index ? (
                   <Form.Control
                     type="text"
@@ -162,7 +168,7 @@ export default function Users() {
                   usuario.email
                 )}
               </td>
-              <td>
+              <td className="text-center">
                 {editIndex === index ? (
                   <Form.Control
                     type="text"
@@ -186,7 +192,7 @@ export default function Users() {
                   usuario.direccion
                 )}
               </td>
-              <td>
+              <td className="text-center">
                 {editIndex === index ? (
                   <Form.Control
                     type="text"
@@ -198,7 +204,7 @@ export default function Users() {
                   usuario.tipo
                 )}
               </td>
-              <td>
+              <td className="text-center">
                 {editIndex === index ? (
                   <> 
                   <Button variant="success" onClick={() => handleSave(usuario.idcliente)}>Guardar</Button>
@@ -212,6 +218,7 @@ export default function Users() {
           ))}
         </tbody>
       </Table>
+      </div>
     </>
   );
 }

@@ -9,6 +9,13 @@
     font-size: 30px;
 }
 
+.adminbut2 {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
 .invBut{
     justify-content: center;
 }
@@ -28,5 +35,5 @@
     padding-left: 1rem;
   }
  
-  
+ 
   
