@@ -1,15 +1,43 @@
 import React, { useState } from 'react';
+import { Modal, Button } from 'react-bootstrap';
 
 export default function Users() {
     const [orderNumber, setOrderNumber] = useState('');
+    const [orderStatus, setOrderStatus] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     const handleInputChange = (event) => {
         setOrderNumber(event.target.value); 
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         console.log("Número de pedido ingresado:", orderNumber);
+        await fetchOrderStatus();
+    };
+
+    const fetchOrderStatus = async () => {
+        const tienda = 'Petstore';
+        const formato = 'json';
+        const url = `http://courrier/status?orden=${orderNumber}&tienda=${tienda}&formato=${formato}`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Error al obtener el estado del pedido');
+            }
+            const data = await response.json();
+            setOrderStatus(data);
+            setShowModal(true);
+        } catch (error) {
+            console.error('Error al consultar el estado del pedido:', error);
+            alert('No se pudo obtener el estado del pedido.');
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setOrderStatus(null);
     };
 
     return (
@@ -29,6 +57,24 @@ export default function Users() {
                 </div>
                 <button type="submit" className="btn btn-primary">Consultar</button>
             </form>
+
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Estado del Pedido</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {orderStatus ? (
+                        <pre>{JSON.stringify(orderStatus, null, 2)}</pre>
+                    ) : (
+                        <p>No se encontró información sobre el pedido.</p>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cerrar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }
