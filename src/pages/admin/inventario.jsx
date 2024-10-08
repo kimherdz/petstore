@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Table, Spinner, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import './admin.css';
+import { Link } from "react-router-dom";
 
 export default function Inventory() {
   const [productos, setProductos] = useState([]);
@@ -107,11 +108,13 @@ export default function Inventory() {
   return (
     <>
       <h2>Inventario</h2>
+
       <div className="adminbut2">
-        <Button variant="secondary" onClick={() => navigate('/adminsss')}>
-          Volver
-        </Button>
+        <Link to="/admin">
+          <Button className="menu-button mb-3">Regresar</Button>
+        </Link>
       </div>
+
       <Form.Group className="form-group-inline">
         <Form.Label className="label-inventario">Ordenar por:</Form.Label>
         <Form.Select onChange={handleSortChange} value={sortOrder}>
