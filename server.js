@@ -180,4 +180,43 @@ app.delete('/api/clientes/:id', async (req, res) => {
       console.error('Error al eliminar el usuario:', error);
       res.status(500).send('Error en el servidor');
   }
-}); 
+});
+
+// Crear un pedido
+app.post('/api/pedidos', async (req, res) => {
+    const { email, total } = req.body;
+
+    if (!email || total === undefined) {
+        return res.status(400).json({ error: 'Email y total son requeridos.' });
+    }
+
+    try {
+        // Obtener el idcliente basado en el email proporcionado
+        const clienteResult = await pool.query('SELECT idcliente FROM Clientes WHERE email = $1', [email]);
+
+        if (clienteResult.rows.length === 0) {
+            return res.status(404).json({ error: 'Cliente no encontrado.' });
+        }
+
+        const idcliente = clienteResult.rows[0].idcliente;
+
+        // Generar un número de pedido aleatorio
+        const orderNumber = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+
+        // Insertar el pedido usando el idcliente y el idpedido aleatorio
+        await pool.query(
+            'INSERT INTO Pedidos (idpedido, idcliente, total) VALUES ($1, $2, $3)',
+            [orderNumber, idcliente, total]
+        );
+
+        // Devolver el número de pedido aleatorio
+        res.json({ orderNumber });
+    } catch (error) {
+        console.error('Error al crear el pedido:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
+
+
+

@@ -7,7 +7,7 @@ import './navcss.css';
 const NavigationBar = () => {
   return (
     <Navbar variant="dark" expand="lg"> 
-      <Navbar.Brand as={Link} to="/">
+      <Navbar.Brand as={Link} to="/login">
       <img 
           src={pyt} 
           style={{ width: '35px', height: 'auto' }}

@@ -18,7 +18,7 @@ export default function App() {
     <BrowserRouter>
       <NavigationBar />
       <Routes>
-        <Route index element={<Catalog />} />
+      <Route path='catalogo' element={<Catalog />} />
         <Route path='Admin' element={<AdminView />} />
         <Route path='courier' element={<Courier />} />
         <Route path='inventario' element={<Inventory />} />
