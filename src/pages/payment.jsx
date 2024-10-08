@@ -6,6 +6,8 @@ import { Form, Button } from 'react-bootstrap';
 const Payment = () => {
   const location = useLocation();
   const total = parseFloat(localStorage.getItem('total')) || 0;
+  const costoEnvio = parseFloat(localStorage.getItem('costoEnvio')) || 0;
+  const totalConEnvio = total + costoEnvio;
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
@@ -150,7 +152,7 @@ const Payment = () => {
           required
         /><br />
         
-        <p className="monto-total">Monto total a Pagar: Q{total.toFixed(2)}</p>
+        <p className="monto-total">Monto total a Pagar: Q{totalConEnvio.toFixed(2)}</p>
 
         <button type="submit" onClick={handleSubmit}>Pagar</button>
       </form>
