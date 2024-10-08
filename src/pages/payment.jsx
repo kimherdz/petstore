@@ -14,10 +14,10 @@ const Payment = () => {
   const [emisor, setEmisor] = useState('');
 
   const cardOptions = [
-    { value: 'Visa', label: 'Visa' },
-    { value: 'American Express', label: 'American Express' },
-    { value: 'Master Card', label: 'Master Card' },
-    { value: 'Credomatic', label: 'Credomatic' },
+    { value: '192.168.0.113/CCVI-Proyecto1/', label: 'Visa' },
+    { value: '192.168.0.102:3000/', label: 'American Express' },
+    { value: '192.168.0.100:3001/autorizacion?', label: 'Master Card' },
+    { value: '192.168.0.106/TarjetaCredito/autorizacion.php?', label: 'Credomatic' },
   ];
 
   const handleCardNumberChange = (e) => {
@@ -69,16 +69,24 @@ const Payment = () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-
-      if (data.autorizacion.status === 'APROBADO') {
-        setMessage(`Pago aprobado. Número de autorización: ${data.autorizacion.numero}`);
+      console.log('Datos recibidos:', data);
+    
+      if (data.autorizacion && data.autorizacion.status === 'APROBADO') {
+        const successMessage = `Pago aprobado. Número de autorización: ${data.autorizacion.numero}`;
+        setMessage(successMessage);
+        alert(successMessage); 
       } else {
-        setMessage('Pago denegado.');
+        const errorMessage = 'Pago denegado.';
+        setMessage(errorMessage);
+        alert(errorMessage);
       }
     } catch (error) {
       console.error('Error al procesar el pago:', error);
-      setMessage('Ocurrió un error al procesar el pago.');
+      const errorMessage = 'Ocurrió un error al procesar el pago.';
+      setMessage(errorMessage);
+      alert(errorMessage); 
     }
+    
   };
 
   return (
@@ -144,7 +152,7 @@ const Payment = () => {
         
         <p className="monto-total">Monto total a Pagar: Q{total.toFixed(2)}</p>
 
-        <button type="submit">Pagar</button>
+        <button type="submit" onClick={handleSubmit}>Pagar</button>
       </form>
 
       {message && <p>{message}</p>}
