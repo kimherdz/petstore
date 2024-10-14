@@ -40,8 +40,8 @@ const Catalogo = () => {
   const addToCart = (id, price, name) => {
     const priceNumber = parseFloat(price.replace(/[^\d.-]/g, ''));
     
-    // Verificar si el producto ya está en el carrito
-    const existingProductIndex = cart.findIndex(item => item.id === id);
+    // Verificar si el producto ya está en el carrito por id y nombre
+    const existingProductIndex = cart.findIndex(item => item.id === id && item.name === name);
 
     if (existingProductIndex !== -1) {
       // Si ya está en el carrito, incrementar la cantidad y el precio total de ese producto
@@ -58,6 +58,24 @@ const Catalogo = () => {
     setTotal(prevTotal => prevTotal + priceNumber);
   };
 
+  const incrementQuantity = (index) => {
+    const updatedCart = [...cart];
+    updatedCart[index].quantity += 1;
+    updatedCart[index].totalPrice += updatedCart[index].price;
+    setCart(updatedCart);
+    setTotal(prevTotal => prevTotal + updatedCart[index].price);
+  };
+
+  const decrementQuantity = (index) => {
+    const updatedCart = [...cart];
+    if (updatedCart[index].quantity > 1) {
+      updatedCart[index].quantity -= 1;
+      updatedCart[index].totalPrice -= updatedCart[index].price;
+      setCart(updatedCart);
+      setTotal(prevTotal => prevTotal - updatedCart[index].price);
+    }
+  };
+
   const removeFromCart = (index) => {
     const itemToRemove = cart[index];
     if (itemToRemove) {
@@ -71,9 +89,11 @@ const Catalogo = () => {
     return cart.map((item, index) => (
       <li key={index}>
         {item.name} - Q{item.price.toFixed(2)} x {item.quantity} = Q{item.totalPrice.toFixed(2)}
-        <Button variant="danger" onClick={() => removeFromCart(index)} style={{ marginLeft: '10px' }}>
-          Eliminar
-        </Button>
+        <div>
+          <Button variant="success" onClick={() => incrementQuantity(index)} style={{ marginRight: '5px' }}>+</Button>
+          <Button variant="warning" onClick={() => decrementQuantity(index)} style={{ marginRight: '5px' }}>-</Button>
+          <Button variant="danger" onClick={() => removeFromCart(index)}>Eliminar</Button>
+        </div>
       </li>
     ));
   };
