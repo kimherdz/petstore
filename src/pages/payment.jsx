@@ -16,9 +16,9 @@ const Payment = () => {
   const [emisor, setEmisor] = useState('');
 
   const cardOptions = [
-    { value: '192.168.0.113/CCVI-Proyecto1/', label: 'Visa' },
-    { value: '192.168.0.102:3000/', label: 'American Express' },
-    { value: '192.168.0.100:3001/autorizacion?', label: 'Master Card' },
+    { value: '192.168.0.103/CCVI-Proyecto1/autorizacion.php?', label: 'Visa' },
+    { value: '192.168.0.100:3000/api/autorizacionTarjeta/autorizacion?', label: 'American Express' },
+    { value: '192.168.0.101:3001/autorizacion?', label: 'Master Card' },
     { value: '192.168.0.106/TarjetaCredito/autorizacion.php?', label: 'Credomatic' },
   ];
 
@@ -66,7 +66,7 @@ const Payment = () => {
     }
 
     // URL de la API para la autorización del pago
-    const url = `http://${encodeURIComponent(emisor)}/autorizacion?tarjeta=${cardNumber}&nombre=${cardName}&fecha_venc=${expiryDate}&num_seguridad=${securityCode}&monto=${total}&tienda=Petstore&formato=json`;
+    const url = `http://${emisor}tarjeta=${cardNumber}&nombre=${cardName}&fecha_venc=${expiryDate}&num_seguridad=${securityCode}&monto=${total}&tienda=Petstore&formato=json`;
 
     try {
       const response = await fetch(url);

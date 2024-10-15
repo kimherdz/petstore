@@ -8,10 +8,10 @@ export default function Users() {
     const [showModal, setShowModal] = useState(false);
 
     const courierOptions = [
-        { value: '192.168.0.103/', label: 'UG Express' },
-        { value: '192.168.0.115/', label: 'Entregas Mcqueen' },
-        { value: '192.168.0.113/', label: 'ALC Express' },
-        { value: '192.168.47.240:8000', label: 'SpeedyBox' },
+        { value: '192.168.0.105', label: 'UG Express' },
+        { value: '192.168.0.108', label: 'Entregas Mcqueen' },
+        { value: '192.168.0.102', label: 'ALC Express' },
+        { value: '192.168.0.110:8000', label: 'SpeedyBox' },
     ];
 
     const handleInputChange = (event) => {

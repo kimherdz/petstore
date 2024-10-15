@@ -18,15 +18,16 @@ export default function Courier() {
   const navigate = useNavigate();
 
   const courierOptions = [
-    { value: '192.168.0.103/', label: 'UG Express' },
-    { value: '192.168.0.115/', label: 'Entregas Mcqueen' },
-    { value: '192.168.0.113/', label: 'ALC Express' },
-    { value: '192.168.0.117/', label: 'SpeedyBox' },
+    { value: '192.168.0.104/consulta.php?', label: 'UG Express' },
+    { value: '192.168.0.108/consulta.php?', label: 'Entregas Mcqueen' },
+    { value: '192.168.0.102/consulta.php?', label: 'ALC Express' },
+    { value: '192.168.0.110:8000/consulta?', label: 'SpeedyBox' },
   ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = `http://${encodeURIComponent(courier)}/consulta?destino=${encodeURIComponent(destino)}&formato=json`;
+    const url = `http://${courier}destino=${encodeURIComponent(destino)}&formato=json`;
+    console.log(url);
     
     try {
       const response = await fetch(url);
@@ -53,7 +54,7 @@ export default function Courier() {
   };
 
   const handleProceedToPayment = () => {
-    const url = `http://${encodeURIComponent(courier)}/envio?orden=${encodeURIComponent(numPedido)}&destinatario=${encodeURIComponent(destinatario)}&destino=${encodeURIComponent(destino)}&direccion=${encodeURIComponent(direccion)}&tienda=${tienda}`;
+    const url = `http://${courier}/envio?orden=${encodeURIComponent(numPedido)}&destinatario=${encodeURIComponent(destinatario)}&destino=${encodeURIComponent(destino)}&direccion=${encodeURIComponent(direccion)}&tienda=${tienda}`;
     console.log("Enviando solicitud a URL:", url);
     navigate('/payment');
   };
