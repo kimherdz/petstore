@@ -15,8 +15,14 @@ export default function Inventory() {
     descripcion: '',
     stock: ''
   });
-  const [sortOrder, setSortOrder] = useState('id'); // Estado para el orden
-  const [sortDirection, setSortDirection] = useState('asc'); // Estado para la dirección
+  const [newProductData, setNewProductData] = useState({
+    nombre: '',
+    precio: '',
+    descripcion: '',
+    stock: ''
+  });
+  const [sortOrder, setSortOrder] = useState('id'); 
+  const [sortDirection, setSortDirection] = useState('asc');
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -33,20 +39,26 @@ export default function Inventory() {
     fetchProductos();
   }, []);
 
-  // Ordenar productos
-  const sortProducts = (a, b) => {
-    const valueA = sortOrder === 'id' ? a.idproducto : (sortOrder === 'cantidad' ? a.stock : a.precio);
-    const valueB = sortOrder === 'id' ? b.idproducto : (sortOrder === 'cantidad' ? b.stock : b.precio);
-
-    if (sortDirection === 'asc') {
-      return valueA > valueB ? 1 : -1;
-    } else {
-      return valueA < valueB ? 1 : -1;
-    }
+  // Función para manejar la entrada en el formulario de nuevos productos
+  const handleNewProductChange = (e) => {
+    const { name, value } = e.target;
+    setNewProductData({
+      ...newProductData,
+      [name]: value,
+    });
   };
 
-  // Ordenar productos cuando cambia el estado
-  const sortedProducts = productos.sort(sortProducts);
+  // Función para enviar el nuevo producto al backend
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/productos', newProductData);
+      setProductos([...productos, response.data]); // Añadir el nuevo producto a la lista
+      setNewProductData({ nombre: '', precio: '', descripcion: '', stock: '' }); // Limpiar el formulario
+    } catch (error) {
+      console.error('Error al agregar el producto:', error);
+    }
+  };
 
   if (loading) {
     return <Spinner animation="border" />;
@@ -55,55 +67,6 @@ export default function Inventory() {
   if (error) {
     return <div>Error al cargar los productos: {error}</div>;
   }
-
-  const handleEditClick = (index) => {
-    setEditIndex(index);
-    setFormData({
-      nombre: productos[index].nombre,
-      precio: productos[index].precio,
-      descripcion: productos[index].descripcion,
-      stock: productos[index].stock
-    });
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSave = async (id) => {
-    try {
-      const response = await axios.put(`http://localhost:5000/api/productos/${id}`, formData);
-      const updatedProductos = [...productos];
-      updatedProductos[editIndex] = response.data; // Actualiza el producto editado
-      setProductos(updatedProductos);
-      setEditIndex(null); // Salir del modo edición
-    } catch (error) {
-      console.error("Error al actualizar el producto:", error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-      try {
-        await axios.delete(`http://localhost:5000/api/productos/${id}`);
-        setProductos(productos.filter(producto => producto.idproducto !== id));
-      } catch (error) {
-        console.error("Error al eliminar el producto:", error);
-      }
-    }
-  };
-
-  const handleSortChange = (e) => {
-    setSortOrder(e.target.value);
-  };
-
-  const handleDirectionChange = () => {
-    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  };
 
   return (
     <>
@@ -115,97 +78,82 @@ export default function Inventory() {
         </Link>
       </div>
 
-      <Form.Group className="form-group-inline">
-        <Form.Label className="label-inventario">Ordenar por:</Form.Label>
-        <Form.Select onChange={handleSortChange} value={sortOrder}>
-          <option value="id">ID</option>
-          <option value="cantidad">Cantidad</option>
-          <option value="precio">Precio</option>
-        </Form.Select>
-
-        <Button variant="info" onClick={handleDirectionChange}>
-          Cambiar dirección: {sortDirection === 'asc' ? 'Ascendente' : 'Descendente'}
+      {/* Formulario para agregar un nuevo producto */}
+      <Form onSubmit={handleAddProduct}>
+        <h4>Añadir nuevo producto</h4>
+        <Form.Group>
+          <Form.Label>Nombre</Form.Label>
+          <Form.Control
+            type="text"
+            name="nombre"
+            value={newProductData.nombre}
+            onChange={handleNewProductChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Precio</Form.Label>
+          <Form.Control
+            type="number"
+            name="precio"
+            value={newProductData.precio}
+            onChange={handleNewProductChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Descripción</Form.Label>
+          <Form.Control
+            type="text"
+            name="descripcion"
+            value={newProductData.descripcion}
+            onChange={handleNewProductChange}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Cantidad (Stock)</Form.Label>
+          <Form.Control
+            type="number"
+            name="stock"
+            value={newProductData.stock}
+            onChange={handleNewProductChange}
+            required
+          />
+        </Form.Group>
+        <Button variant="success" type="submit" className="mt-2">
+          Añadir Producto
         </Button>
-      </Form.Group>
-    <div className="container d-flex justify-content-center mt-3">
-      <Table striped bordered hover>
-        <thead>
-        <tr className="text-center">
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Descripción</th>
-            <th>Cantidad</th>
-            <th> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedProducts.map((producto, index) => (
-            <tr key={producto.idproducto}>
-              <td className="text-center">{producto.idproducto}</td>
-              <td>
-                {editIndex === index ? (
-                  <Form.Control
-                    type="text"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  producto.nombre
-                )}
-              </td>
-              <td className="text-center">
-                {editIndex === index ? (
-                  <Form.Control
-                    type="number"
-                    name="precio"
-                    value={formData.precio}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  typeof producto.precio === "number" ? producto.precio.toFixed(2) : producto.precio
-                )}
-              </td>
-              <td>
-                {editIndex === index ? (
-                  <Form.Control
-                    type="text"
-                    name="descripcion"
-                    value={formData.descripcion}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  producto.descripcion
-                )}
-              </td>
-              <td className="text-center">
-                {editIndex === index ? (
-                  <Form.Control
-                    type="number"
-                    name="stock"
-                    value={formData.stock}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  producto.stock > 0 ? producto.stock : "Sin stock"
-                )}
-              </td>
-              <td className="text-center">
-                {editIndex === index ? (
-                  <> 
-                  <Button variant="success" onClick={() => handleSave(producto.idproducto)}>Guardar</Button>
-                  <Button variant="danger" onClick={() => handleDelete(producto.idproducto)}>Eliminar</Button>
-                  </>
-                ) : (
-                  <Button variant="primary" onClick={() => handleEditClick(index)}>Editar</Button>
-                )}
-              </td>
+      </Form>
+
+      {/* Tabla de productos */}
+      <div className="container d-flex justify-content-center mt-3">
+        <Table striped bordered hover>
+          <thead>
+            <tr className="text-center">
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Descripción</th>
+              <th>Cantidad</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-     </div> 
+          </thead>
+          <tbody>
+            {productos.map((producto, index) => (
+              <tr key={producto.idproducto}>
+                <td className="text-center">{producto.idproducto}</td>
+                <td>{producto.nombre}</td>
+                <td className="text-center">{producto.precio}</td>
+                <td>{producto.descripcion}</td>
+                <td className="text-center">{producto.stock > 0 ? producto.stock : "Sin stock"}</td>
+                <td className="text-center">
+                  {/* Botones de editar y eliminar */}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
     </>
   );
 }

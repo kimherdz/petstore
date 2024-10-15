@@ -11,8 +11,8 @@ const Catalogo = () => {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [orderNumber, setOrderNumber] = useState(''); // Estado para el número de pedido
-  const [showOrderModal, setShowOrderModal] = useState(false); // Estado para el modal del número de pedido
+  const [orderNumber, setOrderNumber] = useState('');
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,14 +39,61 @@ const Catalogo = () => {
 
   const addToCart = (id, price, name) => {
     const priceNumber = parseFloat(price.replace(/[^\d.-]/g, ''));
-    setCart([...cart, { id, name, price: priceNumber, quantity: 1, totalPrice: priceNumber }]);
+    
+    // Verificar si el producto ya está en el carrito por id y nombre
+    const existingProductIndex = cart.findIndex(item => item.id === id && item.name === name);
+
+    if (existingProductIndex !== -1) {
+      // Si ya está en el carrito, incrementar la cantidad y el precio total de ese producto
+      const updatedCart = [...cart];
+      updatedCart[existingProductIndex].quantity += 1;
+      updatedCart[existingProductIndex].totalPrice += priceNumber;
+      setCart(updatedCart);
+    } else {
+      // Si no está, agregarlo como nuevo
+      setCart([...cart, { id, name, price: priceNumber, quantity: 1, totalPrice: priceNumber }]);
+    }
+
+    // Actualizar el total general
     setTotal(prevTotal => prevTotal + priceNumber);
   };
 
+  const incrementQuantity = (index) => {
+    const updatedCart = [...cart];
+    updatedCart[index].quantity += 1;
+    updatedCart[index].totalPrice += updatedCart[index].price;
+    setCart(updatedCart);
+    setTotal(prevTotal => prevTotal + updatedCart[index].price);
+  };
+
+  const decrementQuantity = (index) => {
+    const updatedCart = [...cart];
+    if (updatedCart[index].quantity > 1) {
+      updatedCart[index].quantity -= 1;
+      updatedCart[index].totalPrice -= updatedCart[index].price;
+      setCart(updatedCart);
+      setTotal(prevTotal => prevTotal - updatedCart[index].price);
+    }
+  };
+
+  const removeFromCart = (index) => {
+    const itemToRemove = cart[index];
+    if (itemToRemove) {
+      const updatedCart = cart.filter((_, i) => i !== index);
+      setCart(updatedCart);
+      setTotal(prevTotal => prevTotal - itemToRemove.totalPrice);
+    }
+  };
+
   const renderCartItems = () => {
-    return cart.map((item) => (
-      <li key={item.id}>
-        {item.name} - Q{item.price.toFixed(2)}
+    return cart.map((item, index) => (
+      <li key={index}>
+        {item.name} - Q{item.price.toFixed(2)} x {item.quantity} = Q{item.totalPrice.toFixed(2)}
+        <div>
+          <Button variant="success" onClick={() => incrementQuantity(index)} style={{ marginRight: '5px' }}>+</Button>
+          <Button variant="warning" onClick={() => decrementQuantity(index)} style={{ marginRight: '5px' }}>-</Button>
+          <Button variant="danger" onClick={() => removeFromCart(index)}>Eliminar</Button>
+        </div>
       </li>
     ));
   };
@@ -59,8 +106,8 @@ const Catalogo = () => {
   const handleClose = () => setShowModal(false);
   const handleOrderModalClose = () => {
     setShowOrderModal(false);
-    navigate('/courier'); // Navegar a la página del courier cuando el modal se cierra
-  }; // Función para cerrar el modal del número de pedido
+    navigate('/courier');
+  };
 
   const handleProceedToCourier = async () => {
     localStorage.setItem('total', total);
@@ -70,8 +117,8 @@ const Catalogo = () => {
     const generatedOrderNumber = await createOrder(email, total);
     
     if (generatedOrderNumber) {
-      setOrderNumber(generatedOrderNumber); // Guarda el número de pedido en el estado
-      setShowOrderModal(true); // Mostrar el modal con el número de pedido
+      setOrderNumber(generatedOrderNumber);
+      setShowOrderModal(true);
     } else {
       console.error('No se pudo generar el número de pedido');
     }
@@ -89,7 +136,6 @@ const Catalogo = () => {
 
       if (response.ok) {
           const result = await response.json();
-          console.log('Número de pedido generado:', result.orderNumber);
           return result.orderNumber;
       } else {
           console.error('Error al crear el pedido:', response.statusText);
@@ -164,7 +210,6 @@ const Catalogo = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal para mostrar el número de pedido generado */}
       <Modal 
         show={showOrderModal} 
         onHide={handleOrderModalClose} 

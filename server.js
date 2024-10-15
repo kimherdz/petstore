@@ -217,6 +217,22 @@ app.post('/api/pedidos', async (req, res) => {
     }
 });
 
+// Agregar un nuevo producto
+app.post('/api/productos', async (req, res) => {
+    const { nombre, precio, descripcion, stock } = req.body;
+  
+    try {
+      const result = await pool.query(
+        'INSERT INTO Producto (nombre, precio, descripcion, stock) VALUES ($1, $2, $3, $4) RETURNING *',
+        [nombre, precio, descripcion, stock]
+      );
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error('Error al agregar el producto:', error);
+      res.status(500).send('Error en el servidor');
+    }
+  });
+  
 
 
 

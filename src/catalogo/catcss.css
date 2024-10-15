@@ -88,3 +88,13 @@
     max-width: 300px; 
     
 }
+
+#cart-items {
+    list-style-type: none;
+    padding: 0;
+}
+  
+#cart-items li {
+    padding: 10px 0; 
+    border-bottom: 1px solid #e4cdb0;
+}
