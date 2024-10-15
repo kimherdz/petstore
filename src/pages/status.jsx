@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function Users() {
     const [orderNumber, setOrderNumber] = useState('');
+    const [courier, setCourier] = useState('');
     const [orderStatus, setOrderStatus] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
+    const courierOptions = [
+        { value: '192.168.0.103/', label: 'UG Express' },
+        { value: '192.168.0.115/', label: 'Entregas Mcqueen' },
+        { value: '192.168.0.113/', label: 'ALC Express' },
+        { value: '192.168.47.240:8000', label: 'SpeedyBox' },
+    ];
+
     const handleInputChange = (event) => {
         setOrderNumber(event.target.value); 
+    };
+
+    const handleCourierChange = (event) => {
+        setCourier(event.target.value);
     };
 
     const handleSubmit = async (event) => {
@@ -17,9 +29,15 @@ export default function Users() {
     };
 
     const fetchOrderStatus = async () => {
+        if (!courier) {
+            alert('Por favor, seleccione un courier.');
+            return;
+        }
+
         const tienda = 'Petstore';
         const formato = 'json';
-        const url = `http://courrier/status?orden=${orderNumber}&tienda=${tienda}&formato=${formato}`;
+        const url = `http://${courier}/status?orden=${orderNumber}&tienda=${tienda}&formato=${formato}`;
+        console.log(url);
 
         try {
             const response = await fetch(url);
@@ -55,7 +73,25 @@ export default function Users() {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Consultar</button>
+                
+                <Form.Group controlId="courierSelect">
+                    <Form.Label>Elegir Courier</Form.Label>
+                    <Form.Control
+                        as="select"
+                        value={courier}
+                        onChange={handleCourierChange}
+                        required
+                    >
+                        <option value="">Seleccione un courier</option>
+                        {courierOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </Form.Control>
+                </Form.Group>
+
+                <button type="submit" className="btn btn-primary mt-3">Consultar</button>
             </form>
 
             <Modal show={showModal} onHide={handleCloseModal}>
